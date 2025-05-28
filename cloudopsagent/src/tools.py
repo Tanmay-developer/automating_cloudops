@@ -7,8 +7,26 @@ from langchain_core.prompts import PromptTemplate
 from langchain_google_genai import ChatGoogleGenerativeAI
 from langchain.agents import create_react_agent, AgentExecutor
 from langchain.tools import Tool
+from langchain_core.tools import tool
+from utils import get_secret
+# from twilio.rest import Client
+# import requests
+from datetime import datetime, timedelta
+
+@tool
+def send_whatsapp_messase(output):
+    account_sid = os.environ["TWILIO_ACCOUNT_SID"]
+    auth_token = os.environ["TWILIO_AUTH_TOKEN"]
+    client = Client(account_sid, auth_token)
+
+    message = client.messages.create(
+        body=output,
+        from_="whatsapp:+14155238886",
+        to="whatsapp:+15005550006",
+    )
 
 
+@tool
 def listec2instance(*args):
     """
     This function returns the name and id of all running EC2 instances.
@@ -28,9 +46,9 @@ def listec2instance(*args):
                 "Unnamed Instance",
             )
             instances.append({"Instance ID": instance_id, "Name": name})
-    # pprint(instances)
     return f"List of the {instances}"
 
+@tool
 def createec2instance(name: str):
     """
     This function creates an EC2 instance.
@@ -54,6 +72,7 @@ def createec2instance(name: str):
     )
     return f"Instance created with instance id: {res["Instances"][0]["InstanceId"]}"
 
+@tool
 def stopec2instance(instance_id):
     """
     This function stops an EC2 instance.
@@ -63,47 +82,49 @@ def stopec2instance(instance_id):
     return f"Instance stopped with instance id: {instance_id}"
     # return {"Message": "Instance stopped", "Instance ID": instance_id}
 
-def getmyagent(_query):
+tool_list = [listec2instance, createec2instance, stopec2instance]
 
-    tools_for_agent = [
-        Tool(name="List EC2 Instances", func=listec2instance, description="Gets all running EC2 instances"),
-        Tool(name="Create EC2 Instance", func=createec2instance, description="Creates an EC2 instance."),
-        Tool(name="Stop EC2 Instance", func=stopec2instance, description="Stops an EC2 instance given an ID."),
-    ]
+# def getmyagent(_query):
 
-    llm = ChatGoogleGenerativeAI(
-        temperature=0,
-        model="gemini-2.0-flash",
-        google_api_key=os.environ["GOOGLE_API_KEY"]
-    )
+#     tools_for_agent = [
+#         Tool(name="List EC2 Instances", func=listec2instance, description="Gets all running EC2 instances"),
+#         Tool(name="Create EC2 Instance", func=createec2instance, description="Creates an EC2 instance."),
+#         Tool(name="Stop EC2 Instance", func=stopec2instance, description="Stops an EC2 instance given an ID."),
+#     ]
 
-    _template = """
-    Answer the following questions as best you can. Make sure the Final Answer is in the same language as the user asked in. You have access to the following tools:
+#     llm = ChatGoogleGenerativeAI(
+#         temperature=0,
+#         model="gemini-2.0-flash",
+#         google_api_key=os.environ["GOOGLE_API_KEY"]
+#     )
 
-    {tools}
+#     _template = """
+#     Answer the following questions as best you can. Make sure the Final Answer is in the same language as the user asked in. You have access to the following tools:
 
-    Use the following format:
+#     {tools}
 
-    Question: the input question you must answer
-    Thought: you should always think about what to do
-    Action: the action to take, should be one of [{tool_names}]
-    Action Input: the input to the action
-    Observation: the result of the action
-    ... (this Thought/Action/Action Input/Observation can repeat N times)
-    Thought: I now know the final answer
-    Final Answer: the final answer to the original input question
+#     Use the following format:
 
-    Begin!
+#     Question: the input question you must answer
+#     Thought: you should always think about what to do
+#     Action: the action to take, should be one of [{tool_names}]
+#     Action Input: the input to the action
+#     Observation: the result of the action
+#     ... (this Thought/Action/Action Input/Observation can repeat N times)
+#     Thought: I now know the final answer
+#     Final Answer: the final answer to the original input question
 
-    Question: {input}
-    Thought:{agent_scratchpad}
-    """
+#     Begin!
 
-    prompt_template = PromptTemplate(input_variables = ["query"], template = _template)
+#     Question: {input}
+#     Thought:{agent_scratchpad}
+#     """
+
+#     prompt_template = PromptTemplate(input_variables = ["query"], template = _template)
     
-    agent = create_react_agent(tools=tools_for_agent, llm=llm, prompt=prompt_template)
-    agent_executor = AgentExecutor(agent=agent, tools=tools_for_agent)
+#     agent = create_react_agent(tools=tools_for_agent, llm=llm, prompt=prompt_template)
+#     agent_executor = AgentExecutor(agent=agent, tools=tools_for_agent)
 
-    result = agent_executor.invoke({"input": _query})
-    pprint(result["output"])
-    return result["output"]
+#     result = agent_executor.invoke({"input": _query})
+#     pprint(result["output"])
+#     return result["output"]

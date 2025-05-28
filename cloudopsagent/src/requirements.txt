@@ -1,4 +1,5 @@
 requests
+logging
 langchain-core>=0.3.37
 langchain-openai>=0.3.6
 langgraph>=0.2.74
@@ -7,3 +8,6 @@ langgraph_dynamodb_checkpoint>=0.2.0
 langgraph-utils
 langgraph-reducer
 langchain-google-genai
+langgraph_utils
+langgraph_reducer
+twilio

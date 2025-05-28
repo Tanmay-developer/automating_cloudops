@@ -1,13 +1,12 @@
 import boto3
 import json
 
+logger = logging.getLogger()
+logger.setLevel(logging.INFO)
 
 def get_secret(SecName):
-    """
-    Fetches the WhatsApp API token from AWS Secrets Manager.
-    """
+    logger.info("Retre")
     client = boto3.client("secretsmanager")
-    
     try:
         response = client.get_secret_value(SecretId=SecName)
         result = json.loads(response['SecretString'])

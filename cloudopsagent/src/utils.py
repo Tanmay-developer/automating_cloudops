@@ -12,5 +12,5 @@ def get_secret(SecName):
         result = json.loads(response['SecretString'])
         return result
     except Exception as e:
-        logger.raise(f"Error fetching secret: {e}")
+        logger.info(f"Error fetching secret: {e}")
         return None

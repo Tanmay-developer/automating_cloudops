@@ -30,13 +30,15 @@ def lambda_handler(event, context):
 
     account_sid = get_secret("TWILIO_ACCOUNT_SID")
     auth_token = get_secret("TWILIO_AUTH_TOKEN")
+    whatsapp_no = get_secret("MY_WHATSAPP_ID")
+
     client = Client(account_sid, auth_token)
 
     try: 
         message = client.messages.create(
             body=response_message,
             from_="whatsapp:+14155238886",
-            to="whatsapp:+91005550006",
+            to=f"whatsapp:{whatsapp_no}",
         )
         logger.info(f"Message sent: SID {message.sid}")
     except Exception as e:

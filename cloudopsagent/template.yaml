@@ -23,6 +23,10 @@ Parameters:
     Type: String
     Default: "GOOGLE_API_KEY"
     Description: "Name of the secret in AWS Secrets Manager for GEMINI Model API Key"
+  WhatsappNumberSecretName:
+    Type: String
+    Default: "MY_WHATSAPP_ID"
+    Description: "Name of the secret in AWS Secrets Manager for Whatsapp Number"
 
 Resources:
   MyRestApi:
@@ -86,6 +90,8 @@ Resources:
             SecretArn: !Sub "arn:aws:secretsmanager:${AWS::Region}:${AWS::AccountId}:secret:${TwilioAccessTokenSecretName}-*"
         - AWSSecretsManagerGetSecretValuePolicy: 
             SecretArn: !Sub "arn:aws:secretsmanager:${AWS::Region}:${AWS::AccountId}:secret:${GoogleAPIKeySecretName}-*"
+        - AWSSecretsManagerGetSecretValuePolicy: 
+            SecretArn: !Sub "arn:aws:secretsmanager:${AWS::Region}:${AWS::AccountId}:secret:${WhatsappNumberSecretName}-*"
         - Statement:
             - Effect: Allow
               Action:

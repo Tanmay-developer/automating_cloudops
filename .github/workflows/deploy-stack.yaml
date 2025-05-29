@@ -17,7 +17,8 @@ jobs:
           aws-region: ap-south-1
       - run: |
           echo "🔨 Starting SAM build..."
-          sam build --template cloudopsagent/template.yaml --use-container --build-dir cloudopsagent/.aws-sam
+          cd cloudopsagent
+          sam build --use-container
           echo "✅ SAM build completed."
       - run: |
           echo "🚀 Starting deploy..."

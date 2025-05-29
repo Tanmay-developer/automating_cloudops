@@ -1,9 +1,5 @@
 requests
-langchain-core
-langchain-openai
-langgraph
+boto3
 langchain
-langgraph-utils
-langgraph-reducer
 langchain-google-genai
 twilio

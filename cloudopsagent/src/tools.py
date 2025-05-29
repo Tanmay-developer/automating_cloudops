@@ -9,8 +9,6 @@ from langchain.agents import create_react_agent, AgentExecutor
 from langchain.tools import Tool
 from langchain_core.tools import tool
 from utils import get_secret
-# from twilio.rest import Client
-# import requests
 from datetime import datetime, timedelta
 
 # @tool

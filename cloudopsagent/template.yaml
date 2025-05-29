@@ -15,7 +15,7 @@ Resources:
     Type: AWS::ApiGateway::RestApi
     Properties:
       Name: my-cloudopsagent-api
-      Description: "Explicitly defined API for Axis Statement POC"
+      Description: "Cloudops Agent API"
       BinaryMediaTypes:
         - 'application/json'
   

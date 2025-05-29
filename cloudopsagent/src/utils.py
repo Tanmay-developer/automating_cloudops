@@ -1,5 +1,6 @@
 import boto3
 import json
+import logging
 
 logger = logging.getLogger()
 logger.setLevel(logging.INFO)

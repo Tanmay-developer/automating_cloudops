@@ -1,0 +1,80 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Transform: AWS::Serverless-2016-10-31
+Description: >
+  cloudopsagent
+
+  SAM Template for cloudopsagent
+
+Globals:
+  Function:
+    Timeout: 30
+    Runtime: python3.13
+
+Resources:
+  MyRestApi:
+    Type: AWS::ApiGateway::RestApi
+    Properties:
+      Name: my-cloudopsagent-api
+      Description: "Explicitly defined API for Axis Statement POC"
+      BinaryMediaTypes:
+        - 'application/json'
+  
+  MyRestApiResource:
+    Type: AWS::ApiGateway::Resource
+    Properties:
+      ParentId: !GetAtt MyRestApi.RootResourceId
+      PathPart: genai
+      RestApiId: !Ref MyRestApi
+
+  MyRestApiMethod:
+    Type: AWS::ApiGateway::Method
+    Properties:
+      AuthorizationType: NONE
+      HttpMethod: POST
+      ResourceId: !Ref MyRestApiResource
+      RestApiId: !Ref MyRestApi
+      Integration:
+        Type: AWS_PROXY
+        IntegrationHttpMethod: POST
+        Uri: 
+          Fn::Sub: arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${CloudopsLambda.Arn}/invocations
+      MethodResponses:
+        - StatusCode: 200
+          ResponseModels:
+            application/json: "Empty"
+
+  ApiDeployment:
+    Type: AWS::ApiGateway::Deployment
+    DependsOn: MyRestApiMethod 
+    Properties:
+      RestApiId: !Ref MyRestApi
+      Description: 'Deployment for api v1.0'
+ 
+  ApiProdStage:
+    Type: AWS::ApiGateway::Stage
+    Properties:
+      DeploymentId: !Ref ApiDeployment
+      RestApiId: !Ref MyRestApi
+      StageName: prod
+
+  CloudopsLambda:
+    Type: AWS::Serverless::Function
+    Properties:
+      FunctionName: my-cloudopsagent-lambda
+      CodeUri: src/
+      Handler: app.lambda_handler
+      Policies:
+        - Statement:
+            - Effect: Allow
+              Action:
+                - ec2:*
+              Resource: "*"
+
+  LambdaInvokePermission:
+    Type: AWS::Lambda::Permission
+    Properties:
+      FunctionName: !Ref CloudopsLambda
+      Action: lambda:InvokeFunction
+      Principal: apigateway.amazonaws.com
+      SourceArn: 
+        Fn::Sub: arn:aws:execute-api:${AWS::Region}:${AWS::AccountId}:${MyRestApi}/*/*/*

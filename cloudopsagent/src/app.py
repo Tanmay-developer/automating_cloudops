@@ -1,5 +1,5 @@
 import json
-# from agent import getmyagent
+from tools import getmyagent
 # import json
 # from tools import tool_list
 # from langgraph.graph import StateGraph,  START, END
@@ -10,12 +10,13 @@ import json
 # import os
 # from langgraph_reducer import PrunableStateFactory
 # import boto3
-# import logging
-# from twilio.rest import Client
+import logging
+from twilio.rest import Client
 # import requests
+from utils import get_secret
 
-# logger = logging.getLogger()
-# logger.setLevel(logging.INFO)
+logger = logging.getLogger()
+logger.setLevel(logging.INFO)
 
 # model = os.environ["MODEL_NAME"]
 
@@ -84,6 +85,23 @@ import json
 #     return 
 
 def lambda_handler(event, context):
-    return {
-        "response": "Hello World!"
-    }
+    logger.info(f"Received event: {event}")
+
+    body = event.get('body')
+
+    params = urllib.parse.parse_qs(body) if body else {}
+    message_body = params.get('Body', [''])[0]
+
+    response_message = getmyagent(message_body)
+
+    account_sid = get_secret("TWILIO_ACCOUNT_SID")
+    auth_token = get_secret("TWILIO_AUTH_TOKEN")
+    client = Client(account_sid, auth_token)
+
+    message = client.messages.create(
+        body=output,
+        from_="whatsapp:+14155238886",
+        to="whatsapp:+15005550006",
+    )
+
+    return None

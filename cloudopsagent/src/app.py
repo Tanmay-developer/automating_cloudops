@@ -23,6 +23,7 @@ def lambda_handler(event, context):
             "body": json.dumps({"error": "No message body provided"})
         }
 
+    logger.info(f"Message body extracted: {event}")
     response_message = getmyagent(message_body)
 
     account_sid = get_secret("TWILIO_ACCOUNT_SID")

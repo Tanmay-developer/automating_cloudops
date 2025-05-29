@@ -26,6 +26,8 @@ def lambda_handler(event, context):
     logger.info(f"Message body extracted: {message_body}")
     response_message = getmyagent(message_body)
 
+    logger.info(f"Response message from LLM")
+
     account_sid = get_secret("TWILIO_ACCOUNT_SID")
     auth_token = get_secret("TWILIO_AUTH_TOKEN")
     client = Client(account_sid, auth_token)

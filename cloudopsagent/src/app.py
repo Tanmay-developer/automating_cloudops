@@ -26,7 +26,7 @@ def lambda_handler(event, context):
     logger.info(f"Message body extracted: {message_body}")
     response_message = getmyagent(message_body)
 
-    logger.info(f"Response message from LLM")
+    logger.info(f"Response message from LLM: {response_message}")
 
     account_sid = get_secret("TWILIO_ACCOUNT_SID")
     auth_token = get_secret("TWILIO_AUTH_TOKEN")
@@ -36,7 +36,7 @@ def lambda_handler(event, context):
         message = client.messages.create(
             body=response_message,
             from_="whatsapp:+14155238886",
-            to="whatsapp:+15005550006",
+            to="whatsapp:+91005550006",
         )
         logger.info(f"Message sent: SID {message.sid}")
     except Exception as e:

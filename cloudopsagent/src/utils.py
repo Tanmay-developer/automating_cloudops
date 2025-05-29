@@ -11,7 +11,7 @@ def get_secret(SecName):
     try:
         response = client.get_secret_value(SecretId=SecName)
         result = json.loads(response['SecretString'])
-        return response['SecretString']
+        return str(response['SecretString'])
     except Exception as e:
         logger.info(f"Error fetching secret: {e}")
         return None

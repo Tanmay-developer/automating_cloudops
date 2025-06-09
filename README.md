@@ -97,4 +97,4 @@ Make sure to set `AWS_ACCESS_KEY_ID` and `AWS_SECRET_ACCESS_KEY` in your GitHub 
 
 ## 👥 Authors
 
-Built by the @Tanmay
+Built by the @Tanmay Chopade

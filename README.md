@@ -58,6 +58,8 @@ sam deploy --guided
 
 ## 📦 GitHub Actions (CI/CD)
 
+[![.github/workflows/deploy-stack.yaml](https://github.com/Tanmay-developer/automating_cloudops/actions/workflows/deploy-stack.yaml/badge.svg?branch=main&event=push)](https://github.com/Tanmay-developer/automating_cloudops/actions/workflows/deploy-stack.yaml)
+
 This project includes a GitHub Actions pipeline for automatic deployment to AWS on every push to the `main` branch.
 
 **Workflow location:** `.github/workflows/deploy.yml`

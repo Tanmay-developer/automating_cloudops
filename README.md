@@ -63,7 +63,7 @@ sam deploy --guided
 
 This project includes a GitHub Actions pipeline for automatic deployment to AWS on every push to the `main` branch.
 
-**Workflow location:** `.github/workflows/deploy.yml`
+**Workflow location:** `.github/workflows/deploy-stack.yml`
 
 ```yaml
 on:
